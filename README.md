@@ -25,10 +25,10 @@ Esta lección forma parte del los aprendizajes necesarios para controlar cargas 
   * Links a Tutoriales  e informacion
   - Librerías importantes - No necesarias
 
-- Control de motores de CC en robotica 
+- Control de motores de CC en robotica
   
-  - M#0- Control por PWM transistor BJC npn ( visto en 2526 CL9) : Velocidad / No Sentido
-  - M#1 - Control con integrado TA6586 : No velocidds / Si sentido de giro 
+  - M#0- Control por PWM transistor BJC npn ( visto en 2526 CL9) : **Velocidad / No Sentido**
+  - M#1 - Control con integrado TA6586 : **No velocidad / Si sentido de giro **
 
 - Tabla resumen de programas
 
@@ -38,7 +38,44 @@ Esta lección forma parte del los aprendizajes necesarios para controlar cargas 
 
 Hay 3 grades grupos de motores en robotica:
 
-    Motores servo : se controla el ángulo de giro en un arco de 180º
+1. **Motores servo** : se controla el ángulo de giro en un arco de 0º  a 180º
+   
+   <u>Uso  típico</u> : brazos robóticos, algun mecanismo que solo requiera giros de 0 a 180, como cerraduras 
+
+2. **Motores paso a paso** 
+   
+   <u>Uso típico</u> : impresoras 3D para posicionar la cabeza impresora, u otras maquinas donde el movimiento circular se cambia a lineal, de forma que se pueda controlar la posicion con precisión
+
+3. **Motores de corriente continua**
+   
+   <u>Uso típico</u> : ruedas de vehículos robóticos, como coches teledirigidos y drones. Tienen 2 sentidos de giro ; horario y anti-horario, asi como control de velocidad 
+
+Para el **proyecto de riego automático** necesitamos controlar un motor de CC, asi que nos centraremos en como controlarlo tanto en sentido de giro como en velocidad.
+
+## Introducción a los motores de Corriente continua
+
+Se puede empezar con el tutorial de Sunfounder
+
+[DC Motor &mdash; SunFounder Pico 2 W Starter Kit for Raspberry Pi Pico 2 W documentation](https://docs.sunfounder.com/projects/pico-2w-kit/en/latest/component/component_dc_motor.html)
+
+Después recomiendo la serie de tutoriales de learning micropython 
+
+    [Motor Introduction - Learning MicroPython](https://dmccreary.github.io/learning-micropython/motors/01-intro/)
+
+porque siguen la lógica de aprendizaje que creo la mejor:
+
+1. Controlar motor CC con **1 transistor sin / con PWM**
+
+2. Controlar motor CC con un **puente en H de transistores**  ( no se suele hacer)
+
+3. Controlar motorCC con un **chip** de puente en H, o similar
+   
+   * Chip L293D ( no en kit SF)
+   * Chip L298N (no en kit SF)
+   * Chip TB6612FNG (no en kit SF - usa MOSFET)
+   * chip DRV8833 ( no en kit SF - usa MOSFET) : es el mas recomendado
+   * **chip TA6586 - en kit SF == > haremos este porque esta en el kit**
+   * ....
 
 ## Materiales y links a información
 
@@ -132,6 +169,4 @@ Todos los programas en microPython
 
 ---
 
-## TO DO y Nota
-
-- 
+## TO DO y Notas
