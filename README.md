@@ -57,19 +57,29 @@ Hay 3 grades grupos de motores en robotica:
 
 Para el **proyecto de riego automático** necesitamos controlar un motor de CC, asi que nos centraremos en como controlarlo tanto en sentido de giro como en velocidad.
 
-## Introducción a los motores de Corriente continua
+## Introducción a los motores de Corriente continua en robótica
+
+### Entender como funciona un motor CC ( con rozamiento)
 
 Se puede empezar con el **tutorial** de Sunfounder
 
 [DC Motor &mdash; SunFounder Pico 2 W Starter Kit for Raspberry Pi Pico 2 W documentation](https://docs.sunfounder.com/projects/pico-2w-kit/en/latest/component/component_dc_motor.html)
 
-Después recomiendo la serie de tutoriales de learning micropython ( aunque estan algo incompletos) 
+o esta simulación
+
+[**DC Motor** - Magnet Academy - MagLab](https://www.google.com/url?client=internal-element-cse&cx=004099242236933193842:9shljmjve7a&q=https://nationalmaglab.org/magnet-academy/watch-play/interactive-tutorials/dc-motor/&sa=U&ved=2ahUKEwj-xPqb7KaTAxVxbKQEHRdWAUMQFnoECAUQAQ&usg=AOvVaw1thIX6Ns0QQQgaSmAViyBW&fexp=121574859,121574858,73152292,73152290)
+
+### Controlar motores CC en robotica
+
+Después recomiendo la serie de tutoriales de la web [Learning micropython](https://dmccreary.github.io/learning-micropython/) , **aunque la serie esta incompleta!!!**
 
     [Motor Introduction - Learning MicroPython](https://dmccreary.github.io/learning-micropython/motors/01-intro/)
 
-porque siguen la lógica de aprendizaje que creo la mejor:
+porque siguen la lógica de aprendizaje que creo la mejor.
 
-1. Controlar motor CC con **1 transistor sin / con PWM**
+Es decir, **lo ideal es hacer en orden los siguientes montajes**
+
+1. (M#0) Controlar motor CC con **1 transistor sin / con PWM**
 
 2. Controlar motor CC con un **puente en H de transistores**  ( no se suele hacer)
 
@@ -79,12 +89,13 @@ porque siguen la lógica de aprendizaje que creo la mejor:
    * Chip L298N (no en kit SF)
    * Chip TB6612FNG (no en kit SF - usa MOSFET)
    * chip DRV8833 ( no en kit SF - usa MOSFET) : es el mas recomendado
-   * **chip TA6586 - en kit SF == > haremos este porque esta en el kit**
+   * **(M#1) chip TA6586 - en kit SF == > haremos este porque esta en el kit - montaje básico**
    * ....
+     4* (M#2) Chip TA6586 + control por Rotary encoder + Display - PENDIENTE
 
 ### Escoger el chip de control de motores (en general)
 
-Otra opcion, es escoger el chip de control y a partir de ahí! buscar tutoriales para ese chip:
+Otra opcion, es escoger el chip de control y a partir de ahí, buscar tutoriales para ese chip:
 
 ![](./doc/drivers_motores_DC_comparativa.png)
 
@@ -104,7 +115,7 @@ Otra opcion, es escoger el chip de control y a partir de ahí! buscar tutoriales
   
   - Hay algun [riesgo de poner motores en paralelo : ver info completa dada por IA](./doc/2motores_paralelo_TA6586.pdf)
 
-Asi que vamos a estudiar como controlar un motor con el chip TA6586 y con transitor S8050
+Asi que vamos a estudiar como controlar un motor con el chip TA6586 y con transistor S8050
 
 ## Materiales y links a información
 
@@ -119,8 +130,8 @@ Asi que vamos a estudiar como controlar un motor con el chip TA6586 y con transi
 | Resistencias 1k y 10k                                                                                                      | para polarización de transistor en Emisor común                                                                                                                  | SI                           | Mon#0     |
 | Diodo 1N4007                                                                                                               | Diodo fly-back evita poicos cuando se corta tensi2motores_paralelo_TA6586.pdfon en bobinas                                                                       | SI                           | Mon#0     |
 | Motor de 5 volt nominales                                                                                                  |                                                                                                                                                                  | SI                           | Todos     |
-| Alimentación del motor entre 5 y 9 volt                                                                                    | Lo mas sencillo es un apila de 9 volt , tambien vale un cargador viejo de entre 5 y 9 volt                                                                       | NO                           | Todos     |
-| TA6586                                                                                                                     |                                                                                                                                                                  | SI                           | Mon#1, #2 |
+| Alimentación del motor entre 5 y 9 volt                                                                                    | Lo mas sencillo es un apila de 9 volt , también vale un cargador viejo de entre 5 y 9 volt                                                                       | NO                           | Todos     |
+| [TA6586](https://docs.sunfounder.com/projects/kepler-kit/en/latest/component/component_ta6585.html)                        | Chip controlador de motor CC ver comparativa de drivers de motores                                                                                               | SI                           | Mon#1, #2 |
 | Display SH1106 + R. encoder  pulsadores                                                                                    |                                                                                                                                                                  | No , pero comprado por todos | Mon#2     |
 
 ### Links a informacion
@@ -188,7 +199,41 @@ Habrá 2 versiones de programa :
 - Programa 1.0 : No velocidad ( será 100%) / Si sentido de giro
 - Programa 2.0 con PWM : SI velocidad / Si sentido de giro
 
-Pero el montaje HW es el mismo ( ver tutorial SF)
+Pero el montaje HW es CASI el mismo ( ver tutorial SF)
+
+Cambios :
+
+GPIO14  -> pin 1 : BI
+
+GPIO15 -> pin 2 : FI
+
+Condensador para evitar el jitter de 100 nF
+
+    Jitter : ruido eléctrico que provoca resets, lecturas erráticas o vibraciones irregulares) suele venir del ruido de conmutación del motor (escobillas + inductancia)
+
+    Lo ideal es soldarlo a los oines del motor
+
+![](./doc/pico_motorTA6586_bb.png)
+
+#### Programa NoV1.0 : No se controla la velocidad ( será 100%) / Si se controla el sentido de giro
+
+[R2526CL10motorCC_6586NoV_1.py](R2526CL10motorCC_6586NoV_1.py)
+
+En un bucle sin fin, se van al tenrnado cilos de 2 seg de giro horario  - stop 5 seg - giro anti-horario 2 seg. El bucle esta dentro de un try-except para parar con control-D o "stop" de thonny , de forma que el motor se para antes de cerrar el programa.
+
+#### Programa Vel2.0 : Se controla la velocidad por PWM  / Se controla el sentido de giro
+
+[R2526CL10motorCC_6586Vel_2_0.py](R2526CL10motorCC_6586Vel_2_0.py)
+
+1- Observar el cambio en las funciones de avanzar  retroceder, ver el uso de PWM
+
+    CUIDADO : no se deben poner BI y FI en 100% de dutty simultáneamente
+
+2- Los comandos de avanzar / retroceder / parar  , asi como el valor de la velocidad se introducen manualmente 
+
+    Observar las while para check de lo introducido
+
+La evolución natural de este programa es a un control más intuitivo con Rotary encoder y pulsadores 
 
 ---
 
@@ -196,14 +241,11 @@ Pero el montaje HW es el mismo ( ver tutorial SF)
 
 Todos los programas en microPython
 
-| Programa                                                   | Montaje | HW si Robotica y Notas               | Objetivo de Aprendizaje              |
-| ---------------------------------------------------------- | ------- | ------------------------------------ | ------------------------------------ |
-| [R2526CL9_ExPWM_inp100_v1.py](R2526CL9_ExPWM_inp100_v1.py) | Mon#0   | programa básico, velocidad por input | solo control de la velocidad por PWM |
-|                                                            |         |                                      |                                      |
-|                                                            |         |                                      |                                      |
-|                                                            |         |                                      |                                      |
-|                                                            |         |                                      |                                      |
-|                                                            |         |                                      |                                      |
+| Programa                                                           | Montaje | HW si Robotica y Notas                          | Objetivo de Aprendizaje              |
+| ------------------------------------------------------------------ | ------- | ----------------------------------------------- | ------------------------------------ |
+| [R2526CL9_ExPWM_inp100_v1.py](R2526CL9_ExPWM_inp100_v1.py)         | Mon#0   | programa básico, velocidad por input            | solo control de la velocidad por PWM |
+| [R2526CL10motorCC_6586NoV_1.py](R2526CL10motorCC_6586NoV_1.py)     | Mon#1   | programa básico - n velocidad                   | chip TA6586 uso básico               |
+| [R2526CL10motorCC_6586Vel_2_0.py](R2526CL10motorCC_6586Vel_2_0.py) | Mon#1   | programa medio - control de velocidad y sentido | chip TA6586 uso con PWM              |
 
 ---
 
