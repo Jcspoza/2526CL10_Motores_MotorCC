@@ -237,15 +237,44 @@ La evolución natural de este programa es a un control más intuitivo con Rotary
 
 ---
 
+### M#2- Control con integrado TA6586 + Display SH1106 y Rotary encoder
+
+- programa 1.0 : SI velocidad con R. Encoder SIN cambio de sentido 
+- programa 2.0 : SI velocidad con R. Encoder  SIN cambio de sentido + display
+- programa 3.0 : SI velocidad con R. Encoder +  cambio de sentido con pulsador + display
+
+Hay que repasar la clase del Rotary encoder 
+
+[GitHub - Jcspoza/2425CL10_DisplayGrafSH1106: 1ros pasos con el Display grafico mono SH1106 128x64 · GitHub](https://github.com/Jcspoza/2425CL10_DisplayGrafSH1106)
+
+#### M#2.1 SI velocidad con R. Encoder SIN cambio de sentido
+
+Es un programa muy básico porque las librerías del RE son muy versátiles y solo configurando opciones quitan mucha programación
+
+IMPORTANTE : instalar en PICO _ /W /2W las dos librerias necesarioas para RE
+
+[rotary.py](rotary.py)
+
+[rotary_irq_rp2.py](rotary_irq_rp2.py)
+
+Programa 1.0
+
+[R2526CL10motorCC_6586VelRE_1_0.py](R2526CL10motorCC_6586VelRE_1_0.py)
+
+---
+
 ## Tabla resumen de programas
 
 Todos los programas en microPython
 
-| Programa                                                           | Montaje | HW si Robotica y Notas                          | Objetivo de Aprendizaje              |
-| ------------------------------------------------------------------ | ------- | ----------------------------------------------- | ------------------------------------ |
-| [R2526CL9_ExPWM_inp100_v1.py](R2526CL9_ExPWM_inp100_v1.py)         | Mon#0   | programa básico, velocidad por input            | solo control de la velocidad por PWM |
-| [R2526CL10motorCC_6586NoV_1.py](R2526CL10motorCC_6586NoV_1.py)     | Mon#1   | programa básico - n velocidad                   | chip TA6586 uso básico               |
-| [R2526CL10motorCC_6586Vel_2_0.py](R2526CL10motorCC_6586Vel_2_0.py) | Mon#1   | programa medio - control de velocidad y sentido | chip TA6586 uso con PWM              |
+| Programa                                                               | Montaje | HW si Robotica y Notas                          | Objetivo de Aprendizaje              |
+| ---------------------------------------------------------------------- | ------- | ----------------------------------------------- | ------------------------------------ |
+| [R2526CL9_ExPWM_inp100_v1.py](R2526CL9_ExPWM_inp100_v1.py)             | Mon#0   | programa básico, velocidad por input            | solo control de la velocidad por PWM |
+| [R2526CL10motorCC_6586NoV_1.py](R2526CL10motorCC_6586NoV_1.py)         | Mon#1   | programa básico - n velocidad                   | chip TA6586 uso básico               |
+| [R2526CL10motorCC_6586Vel_2_0.py](R2526CL10motorCC_6586Vel_2_0.py)     | Mon#1   | programa medio - control de velocidad y sentido | chip TA6586 uso con PWM              |
+| [R2526CL10motorCC_6586VelRE_1_0.py](R2526CL10motorCC_6586VelRE_1_0.py) | Mon#2.1 | Requiere librerias RE                           |                                      |
+| [rotary.py](rotary.py)                                                 |         | Libreria RE 1                                   |                                      |
+| [rotary_irq_rp2.py](rotary_irq_rp2.py)                                 |         | Libreria RE 2                                   |                                      |
 
 ---
 
